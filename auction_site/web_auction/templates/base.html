@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Auction Site{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'web_auction/styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h1 class="site-title">Auction House</h1>
+            <nav class="navbar">
+                <ul class="nav-links">
+                    <li><a href="{% url 'index' %}" class="nav-item">Home</a></li>
+                    <li><a href="{% url 'add_auction' %}" class="nav-item">Add Auction</a></li>
+                    <li><a href="{% url 'view_auctions' %}" class="nav-item">View Auctions</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- Background Music -->
+    <audio id="background-audio" autoplay loop>
+        <source src="{% static 'media/background.mp3' %}" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
+    
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    
+    <footer>
+        <p>&copy; 2024 Auction Site</p>
+    </footer>
+</body>
+</html>

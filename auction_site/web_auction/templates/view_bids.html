@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Bids for {{ auction.title }}{% endblock %}
+
+{% block content %}
+<h2>Bids for {{ auction.title }}</h2>
+<div class="bids-container">
+    {% for bid in bids %}
+        <div class="card">
+            <p><strong>Bidder:</strong> {{ bid.user.username }}</p>
+            <p><strong>Bid Amount:</strong> ${{ bid.amount }}</p>
+            <p><strong>Placed at:</strong> {{ bid.timestamp|date:"D, d M Y H:i" }}</p>
+        </div>
+    {% empty %}
+        <p>No bids placed yet.</p>
+    {% endfor %}
+</div>
+<a href="{% url 'index' %}" class="btn">Back to Auctions</a>
+{% endblock %}

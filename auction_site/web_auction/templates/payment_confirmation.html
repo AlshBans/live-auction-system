@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block title %}Payment Confirmation{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <!-- Card to display payment details -->
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3>Payment Confirmation</h3>
+                </div>
+                <div class="card-body">
+                    <h4 class="text-center">Thank you for your purchase!</h4>
+                    
+                    <div class="mb-4">
+                        <h5>Auction Details</h5>
+                        <div class="card shadow-sm mb-3">
+                            <div class="card-body">
+                                <p><strong>Auction Title:</strong> {{ auction.title }}</p>
+                                <p><strong>Description:</strong> {{ auction.description }}</p>
+                                <p><strong>Base Amount:</strong> ${{ auction.base_amount }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5>Top Bid Details</h5>
+                        <div class="card shadow-sm mb-3">
+                            <div class="card-body">
+                                <p><strong>Bidder Name:</strong> {{ top_bid.user.username }}</p>
+                                <p><strong>Bid Amount:</strong> ${{ top_bid.amount }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5>Payment Information</h5>
+                        <div class="card shadow-sm mb-3">
+                            <div class="card-body">
+                                <p><strong>Amount Paid:</strong> ${{ transaction.amount_paid }}</p>
+                                <p><strong>Transaction ID:</strong> {{ transaction.transaction_id }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-5">
+                        <button class="btn btn-success" onclick="window.location.href='{% url 'view_auctions' %}'">
+                            <i class="fas fa-arrow-left"></i> Go to Auctions
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block styles %}
+<style>
+    .container {
+        max-width: 900px;
+    }
+
+    .card {
+        border-radius: 10px;
+    }
+
+    .card-header {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .card-body {
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        padding: 20px;
+    }
+
+    .card-body p {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    .card-body h5 {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+
+    .card-shadow-sm {
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+    }
+
+    .btn-success:hover {
+        background-color: #218838;
+    }
+
+    .btn i {
+        margin-right: 8px;
+    }
+</style>
+{% endblock %}

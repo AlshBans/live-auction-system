@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+{% load static %}  <!-- Load static files -->
+
+{% block title %}Auction Site - Home{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Current Auction</h2>
+    {% if auction %}
+        <div class="auction-card">
+            <h3 class="auction-title">{{ auction.title }}</h3>
+
+            <!-- Image Box -->
+            {% if auction.image %}
+                <div class="auction-image-container">
+                    <img src="{{ auction.image.url }}" alt="Auction Item Image">
+                </div>
+            {% endif %}
+            
+            <p class="auction-description">{{ auction.description }}</p>
+            <div class="auction-details">
+                <p class="base-amount">Base Amount: ${{ auction.base_amount }}</p>
+                <p class="end-time">Ends at: {{ auction.end_time|date:"D, d M Y H:i" }}</p>
+            </div>
+
+            <div class="timer-box">
+                <h4>Auction Timer</h4>
+                <div class="auction-timer" id="timer">
+                    <span class="countdown-digit" id="days">00</span>d 
+                    <span class="countdown-digit" id="hours">00</span>h 
+                    <span class="countdown-digit" id="minutes">00</span>m 
+                    <span class="countdown-digit" id="seconds">00</span>s
+                </div>
+            </div>
+
+            <div class="button-group">
+                <a href="{% url 'place_bid' auction.id %}" class="btn">Place a Bid</a>
+                <a href="{% url 'view_bids' auction.id %}" class="btn btn-secondary">View Bids</a>
+                <button id="nextAuctionBtn" class="btn btn-next" onclick="proceedToNextAuction()">Next Auction</button>
+                <a href="{% url 'close_auction' auction.id %}" class="btn btn-warning" onclick="return confirm('Are you sure you want to close this auction?');">Close Auction</a>
+            </div>
+
+            <h4>Top Bid:</h4>
+            {% if top_bid %}
+                <p><strong>{{ top_bid.bidder_name }}</strong> placed a bid of ${{ top_bid.amount }} on {{ top_bid.timestamp|date:"D, d M Y H:i" }}</p>
+            {% else %}
+                <p>No bids placed yet.</p>
+            {% endif %}
+
+            <h4>Action:</h4>
+            {% if top_bid %}
+                <a href="{% url 'pay_now' auction.id %}?bidder_name={{ top_bid.bidder_name }}&amount={{ top_bid.amount }}" class="btn btn-success">Pay Now</a>
+            {% else %}
+                <p>No bids placed, so no payment required.</p>
+            {% endif %}
+        </div>
+
+        <!-- Play auction start sound -->
+        <script>
+            var startAuctionAudio = new Audio("{% static 'media/start_auction.mp3' %}");
+            startAuctionAudio.play();
+        </script>
+    {% else %}
+        <p>No active auctions available.</p>
+    {% endif %}
+</div>
+
+<script>
+    // Countdown timer for auction end time
+    const endTime = new Date("{{ auction.end_time|date:'Y-m-d H:i:s' }}").getTime();
+
+    const daysElement = document.getElementById("days");
+    const hoursElement = document.getElementById("hours");
+    const minutesElement = document.getElementById("minutes");
+    const secondsElement = document.getElementById("seconds");
+
+    const countdown = setInterval(function() {
+        const now = new Date().getTime();
+        const distance = endTime - now;
+
+        if (distance < 0) {
+            clearInterval(countdown);
+            daysElement.innerHTML = "00";
+            hoursElement.innerHTML = "00";
+            minutesElement.innerHTML = "00";
+            secondsElement.innerHTML = "00";
+            document.getElementById("timer").innerHTML = "Auction Ended";
+
+            // Play auction end sound
+            var endAuctionAudio = new Audio("{% static 'media/end_auction.mp3' %}");
+            endAuctionAudio.play();
+        } else {
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            daysElement.innerHTML = String(days).padStart(2, '0');
+            hoursElement.innerHTML = String(hours).padStart(2, '0');
+            minutesElement.innerHTML = String(minutes).padStart(2, '0');
+            secondsElement.innerHTML = String(seconds).padStart(2, '0');
+        }
+    }, 1000);
+
+    function proceedToNextAuction() {
+        const auctionId = {{ auction.id }};
+        
+        // Play a sound effect when moving to the next auction
+        var nextAuctionAudio = new Audio("{% static 'media/next_auction.mp3' %}");
+        nextAuctionAudio.play();
+        
+        fetch(`/update_priority/${auctionId}/`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    window.location.reload(); // Reload the page to show the next auction
+                } else {
+                    alert("An error occurred while proceeding to the next auction.");
+                }
+            });
+    }
+</script>
+{% endblock %}

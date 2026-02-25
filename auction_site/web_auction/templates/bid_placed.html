@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% load static %}  <!-- Load static files -->
+{% block title %}Bid Placed Successfully{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Bid Placed Successfully!</h2>
+    <p>Your bid of <strong>${{ bid_amount }}</strong> for the auction titled <strong>{{ auction_title }}</strong> has been successfully placed.</p>
+    <p>Thank you for participating, <strong>{{ username }}</strong>!</p> <!-- Show username -->
+    <div class="button-group">
+        <a href="{% url 'index' %}" class="btn">Return to Auctions</a>
+        <a href="{% url 'view_bids' auction_id %}" class="btn btn-secondary">View Bids</a>
+    </div>
+</div>
+
+<script>
+    // Play the bid placed sound
+    var bidPlacedAudio = new Audio("{% static 'media/bid_placed.mp3' %}");
+    bidPlacedAudio.play();
+</script>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Bid Error{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Bid Placement Error</h2>
+    <p>Unfortunately, there was an error placing your bid.</p>
+    <p><strong>Error:</strong> {{ error_message }}</p>
+    <div class="button-group">
+        <a href="{% url 'index' %}" class="btn">Return to Auctions</a>
+        <a href="{% url 'place_bid' auction_id %}" class="btn btn-secondary">Try Again</a>
+    </div>
+</div>
+{% endblock %}

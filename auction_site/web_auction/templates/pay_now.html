@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Pay Now{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Complete Payment</h2>
+    <p>Top bidder: <strong>{{ top_bid.user.username }}</strong></p>
+    <p>Amount: ${{ top_bid.amount }}</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="transaction_id">Transaction ID</label>
+            <input type="text" name="transaction_id" id="transaction_id" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-success">Complete Payment</button>
+    </form>
+</div>
+{% endblock %}

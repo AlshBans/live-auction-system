@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+
+{% block title %}View Auctions{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">All Auctions</h2>
+
+    <!-- Current Auctions -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h4 class="text-primary mb-3">Active Auctions</h4>
+            <div class="row g-4">
+                {% for auction in current_auctions %}
+                <div class="col-md-4">
+                    <div class="card shadow-lg border-light rounded" style="min-height: 380px;">
+                        <div class="auction-image-box">
+                            <img src="{% if auction.image %}{{ auction.image.url }}{% else %}/static/default_image.jpg{% endif %}" class="card-img-top" alt="Auction image">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ auction.title }}</h5>
+                            <p class="card-text">{{ auction.description|truncatewords:20 }}</p>
+                            <p class="card-text"><small class="text-muted">Ends on: {{ auction.end_time|date:"F j, Y, H:i" }}</small></p>
+                            <p class="card-text">
+                                <span class="badge rounded-pill {% if auction.end_time <= now %}bg-danger{% else %}bg-success{% endif %}">
+                                    {% if auction.end_time <= now %}Closed{% else %}Open{% endif %}
+                                </span>
+                            </p>
+
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                {% if auction.end_time <= now %}
+                                    <a href="{% url 'payment_confirmation' auction.id %}" class="btn btn-info btn-sm">
+                                        <i class="fas fa-info-circle"></i> View Transaction
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'place_bid' auction.id %}" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-gavel"></i> Place a Bid
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <div class="alert alert-info text-center">
+                        No active auctions at the moment.
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Past Auctions -->
+    <div class="row">
+        <div class="col-12">
+            <h4 class="text-secondary mb-3">Past Auctions</h4>
+            <div class="row g-4">
+                {% for auction in past_auctions %}
+                <div class="col-md-4">
+                    <div class="card shadow-lg border-light rounded" style="min-height: 380px;">
+                        <div class="auction-image-box">
+                            <img src="{% if auction.image %}{{ auction.image.url }}{% else %}/static/default_image.jpg{% endif %}" class="card-img-top" alt="Auction image">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ auction.title }}</h5>
+                            <p class="card-text">{{ auction.description|truncatewords:20 }}</p>
+                            <p class="card-text"><small class="text-muted">Ended on: {{ auction.end_time|date:"F j, Y, H:i" }}</small></p>
+                            <p class="card-text">
+                                <span class="badge rounded-pill {% if auction.transaction_set.exists %}bg-dark{% else %}bg-secondary{% endif %}">
+                                    {% if auction.transaction_set.exists %}Completed{% else %}No Transactions{% endif %}
+                                </span>
+                            </p>
+
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                {% if auction.transaction_set.exists %}
+                                    <a href="{% url 'payment_confirmation' auction.id %}" class="btn btn-info btn-sm">
+                                        <i class="fas fa-info-circle"></i> View Transaction
+                                    </a>
+                                {% else %}
+                                    <span class="text-muted">No Transaction</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <div class="alert alert-warning text-center">
+                        No past auctions to display.
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block styles %}
+<style>
+    .card {
+        transition: all 0.3s ease;
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        border-radius: 15px;
+    }
+
+    .card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Image Box: ensures a fixed size container for auction images */
+    .auction-image-box {
+        height: 200px;
+        overflow: hidden;
+        background-color: #f4f4f4; /* Placeholder for missing images */
+        border-radius: 15px 15px 0 0;
+        position: relative;
+    }
+
+    .card-img-top {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;  /* Ensures the image fits properly in the container */
+        object-position: center;
+    }
+
+    .card-title {
+        font-weight: bold;
+        color: #333;
+    }
+
+    .card-text {
+        font-size: 14px;
+        color: #666;
+    }
+
+    .badge {
+        font-size: 13px;
+        padding: 8px 12px;
+    }
+
+    .btn-sm {
+        padding: 6px 12px;
+        font-size: 14px;
+    }
+
+    .btn-info {
+        background-color: #17a2b8;
+        color: white;
+    }
+
+    .btn-info:hover {
+        background-color: #138496;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .alert {
+        border-radius: 10px;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 767px) {
+        .card {
+            margin-bottom: 20px;
+        }
+    }
+
+    @media (min-width: 768px) {
+        .card-img-top {
+            max-height: 250px;
+        }
+    }
+</style>
+{% endblock %}
