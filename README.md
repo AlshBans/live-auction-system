@@ -1,11 +1,11 @@
-# 🏷 Live Auction System
+#  Live Auction System
 
-## 📌 Overview
+##  Overview
 The **Live Auction System** is a web-based real-time auction platform that allows multiple participants to bid on items. It ensures progressive bidding, validates all bids, and declares the highest bidder at the end of the auction.
 
 ---
 
-## 🎯 Objective
+##  Objective
 - Simulate a real-world auction experience
 - Ensure each new bid is higher than the previous
 - Track all bids and maintain bid history
@@ -13,7 +13,7 @@ The **Live Auction System** is a web-based real-time auction platform that allow
 
 ---
 
-## 🛠 Technologies Used
+##  Technologies Used
 - **Python**  
 - **Django Framework**  
 - **HTML / CSS**  
@@ -22,7 +22,7 @@ The **Live Auction System** is a web-based real-time auction platform that allow
 
 ---
 
-## ⚙ Features
+##  Features
 - **Add Auction Items:** Admin can add new items with a starting price  
 - **Progressive Bidding:** Ensures each bid is higher than the previous one  
 - **Multiple Participants:** Allows multiple users to participate in an auction  
@@ -32,7 +32,7 @@ The **Live Auction System** is a web-based real-time auction platform that allow
 
 ---
 
-## 🧠 Core Logic
+##  Core Logic
 1. Users can only place a bid if it is **higher than the current highest bid**  
 2. Invalid bids are rejected with a message  
 3. All valid bids are stored and continuously update the highest bid  
